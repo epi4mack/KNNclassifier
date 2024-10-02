@@ -24,7 +24,7 @@ if __name__ == '__main__':
             le = LabelEncoder()
             train_dataset[column] = le.fit_transform(train_dataset[column])
 
-    k = 15
+    k = 2
     knn_classifier = KNNclassifier(k)
     knn_classifier.fit(train_dataset)
 
