@@ -2,8 +2,6 @@ import numpy as np
 from collections import Counter
 
 class KNNclassifier:
-    def __init__(self, k):
-        self.k = k
 
     @staticmethod
     def get_distance(a, b):
@@ -22,7 +20,7 @@ class KNNclassifier:
             point.pop(3)
             self.data[preference].append(point)
 
-    def predict(self, new_point):
+    def predict(self, new_point, k):
         distances = []
 
         for preference in self.data:
@@ -30,6 +28,6 @@ class KNNclassifier:
                 distance = KNNclassifier.get_distance(point, new_point)
                 distances.append((distance, preference))
 
-        preferences = [distance[1] for distance in sorted(distances)[:self.k]]
+        preferences = [distance[1] for distance in sorted(distances)[:k]]
         result = Counter(preferences).most_common(1)[0][0]
         return result
