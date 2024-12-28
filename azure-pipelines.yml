@@ -1,31 +1,27 @@
-# Python package
-# Create and test a Python package on multiple Python versions.
-# Add steps that analyze code, save the dist with the build record, publish to a PyPI-compatible index, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/python
-
 trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
-
-strategy:
-  matrix:
-    Python310:
-      python.version: '3.10'
+  name: 'Default'  # Указываем пул Default, который является стандартным в Azure DevOps
 
 steps:
 - task: UsePythonVersion@0
   inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+    versionSpec: '3.10'
+  displayName: 'Use Python 3.10'
 
 - script: |
     python -m pip install --upgrade pip
-    pip install -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt
   displayName: 'Install dependencies'
 
 - script: |
     pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+    pytest --disable-warnings
+  displayName: 'Run pytest tests'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/test-*.xml'
+    testRunTitle: 'pytest results'
+  condition: succeededOrFailed()
